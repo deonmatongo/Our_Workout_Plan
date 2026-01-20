@@ -1,4 +1,4 @@
-# Marathon Muse
+# Our_Workout_Plan
 
 A marathon training calendar app with workout tracking.
 

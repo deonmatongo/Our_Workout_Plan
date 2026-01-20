@@ -1,6 +1,6 @@
-# Marathon Muse Backend API
+# Our_Workout_Plan Backend Server API
 
-Backend server for Marathon Muse that stores workout data in JSON files.
+Backend server for Our_Workout_Plan that stores workout data in JSON files.
 
 ## Setup
 
