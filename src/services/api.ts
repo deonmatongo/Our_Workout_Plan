@@ -1,56 +1,153 @@
 import { Workout, MarathonProgress } from '@/types/fitness';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+import { supabase } from '@/lib/supabase';
 
 export const workoutApi = {
   async getAll(): Promise<Workout[]> {
-    const response = await fetch(`${API_BASE_URL}/workouts`);
-    if (!response.ok) throw new Error('Failed to fetch workouts');
-    return response.json();
+    const { data, error } = await supabase
+      .from('workouts')
+      .select('*')
+      .order('date', { ascending: false });
+    
+    if (error) throw new Error(`Failed to fetch workouts: ${error.message}`);
+    
+    // Transform snake_case to camelCase
+    return (data || []).map(workout => ({
+      id: workout.id,
+      date: workout.date,
+      type: workout.type,
+      title: workout.title,
+      duration: workout.duration,
+      distance: workout.distance,
+      notes: workout.notes,
+      completed: workout.completed,
+      completedBy: workout.completed_by || [],
+      createdBy: workout.created_by,
+    }));
   },
 
   async create(workout: Omit<Workout, 'id'>): Promise<Workout> {
-    const response = await fetch(`${API_BASE_URL}/workouts`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(workout),
-    });
-    if (!response.ok) throw new Error('Failed to create workout');
-    return response.json();
+    const { data, error } = await supabase
+      .from('workouts')
+      .insert({
+        date: workout.date,
+        type: workout.type,
+        title: workout.title,
+        duration: workout.duration,
+        distance: workout.distance,
+        notes: workout.notes,
+        completed: workout.completed,
+        completed_by: workout.completedBy || [],
+        created_by: workout.createdBy,
+      })
+      .select()
+      .single();
+    
+    if (error) throw new Error(`Failed to create workout: ${error.message}`);
+    
+    return {
+      id: data.id,
+      date: data.date,
+      type: data.type,
+      title: data.title,
+      duration: data.duration,
+      distance: data.distance,
+      notes: data.notes,
+      completed: data.completed,
+      completedBy: data.completed_by || [],
+      createdBy: data.created_by,
+    };
   },
 
   async update(id: string, updates: Partial<Workout>): Promise<Workout> {
-    const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates),
-    });
-    if (!response.ok) throw new Error('Failed to update workout');
-    return response.json();
+    const updateData: any = {};
+    if (updates.date !== undefined) updateData.date = updates.date;
+    if (updates.type !== undefined) updateData.type = updates.type;
+    if (updates.title !== undefined) updateData.title = updates.title;
+    if (updates.duration !== undefined) updateData.duration = updates.duration;
+    if (updates.distance !== undefined) updateData.distance = updates.distance;
+    if (updates.notes !== undefined) updateData.notes = updates.notes;
+    if (updates.completed !== undefined) updateData.completed = updates.completed;
+    if (updates.completedBy !== undefined) updateData.completed_by = updates.completedBy;
+    if (updates.createdBy !== undefined) updateData.created_by = updates.createdBy;
+
+    const { data, error } = await supabase
+      .from('workouts')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw new Error(`Failed to update workout: ${error.message}`);
+    
+    return {
+      id: data.id,
+      date: data.date,
+      type: data.type,
+      title: data.title,
+      duration: data.duration,
+      distance: data.distance,
+      notes: data.notes,
+      completed: data.completed,
+      completedBy: data.completed_by || [],
+      createdBy: data.created_by,
+    };
   },
 
   async delete(id: string): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) throw new Error('Failed to delete workout');
+    const { error } = await supabase
+      .from('workouts')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw new Error(`Failed to delete workout: ${error.message}`);
   },
 };
 
 export const marathonProgressApi = {
   async get(): Promise<MarathonProgress> {
-    const response = await fetch(`${API_BASE_URL}/marathon-progress`);
-    if (!response.ok) throw new Error('Failed to fetch marathon progress');
-    return response.json();
+    const { data, error } = await supabase
+      .from('marathon_progress')
+      .select('*')
+      .eq('id', 'default')
+      .single();
+    
+    if (error && error.code !== 'PGRST116') {
+      throw new Error(`Failed to fetch marathon progress: ${error.message}`);
+    }
+    
+    if (!data) {
+      // Return default if not found
+      return {
+        id: 'default',
+        completedWorkouts: [],
+        lastUpdated: new Date().toISOString(),
+      };
+    }
+    
+    return {
+      id: data.id,
+      completedWorkouts: data.completed_workouts || [],
+      lastUpdated: data.last_updated,
+    };
   },
 
   async update(progress: MarathonProgress): Promise<MarathonProgress> {
-    const response = await fetch(`${API_BASE_URL}/marathon-progress`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(progress),
-    });
-    if (!response.ok) throw new Error('Failed to update marathon progress');
-    return response.json();
+    const { data, error } = await supabase
+      .from('marathon_progress')
+      .upsert({
+        id: progress.id,
+        completed_workouts: progress.completedWorkouts,
+        last_updated: new Date().toISOString(),
+      })
+      .select()
+      .single();
+    
+    if (error) throw new Error(`Failed to update marathon progress: ${error.message}`);
+    
+    return {
+      id: data.id,
+      completedWorkouts: data.completed_workouts || [],
+      lastUpdated: data.last_updated,
+    };
   },
 };
