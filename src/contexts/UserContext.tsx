@@ -11,8 +11,8 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const defaultUsers: User[] = [
-  { id: 'partner1', name: 'Partner 1', color: '#3b82f6' }, // blue
-  { id: 'partner2', name: 'Partner 2', color: '#ec4899' }, // pink
+  { id: 'partner1', name: 'Daddy', color: '#3b82f6' }, // blue
+  { id: 'partner2', name: 'Little Princess', color: '#ec4899' }, // pink
 ];
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
