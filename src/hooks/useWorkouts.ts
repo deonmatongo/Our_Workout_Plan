@@ -13,15 +13,19 @@ export const useWorkouts = () => {
 
   const loadWorkouts = async () => {
     try {
+      console.log('Loading workouts from Supabase...');
       const data = await workoutApi.getAll();
+      console.log('Loaded workouts:', data);
       // Ensure completedBy array exists for all workouts
       const normalizedData = data.map(w => ({
         ...w,
         completedBy: w.completedBy || (w.completed ? ['partner1', 'partner2'] : [])
       }));
       setWorkouts(normalizedData);
+      console.log('Workouts normalized and set:', normalizedData.length);
     } catch (error) {
       console.error('Failed to load workouts:', error);
+      alert('Failed to load workouts from database. Make sure you have run the SQL schema in Supabase. Check console for details.');
     } finally {
       setLoading(false);
     }
@@ -29,13 +33,16 @@ export const useWorkouts = () => {
 
   const addWorkout = async (workout: Omit<Workout, 'id'>) => {
     try {
+      console.log('Adding workout:', workout);
       const newWorkout = await workoutApi.create({
         ...workout,
         completedBy: workout.completedBy || [],
       });
+      console.log('Workout added successfully:', newWorkout);
       setWorkouts((prev) => [...prev, newWorkout]);
     } catch (error) {
       console.error('Failed to add workout:', error);
+      alert('Failed to add workout. Make sure you have run the SQL schema in Supabase. Check console for details.');
       throw error;
     }
   };
@@ -54,26 +61,42 @@ export const useWorkouts = () => {
 
   const deleteWorkout = async (id: string) => {
     try {
+      console.log('Deleting workout:', id);
       await workoutApi.delete(id);
       setWorkouts((prev) => prev.filter((w) => w.id !== id));
+      console.log('Workout deleted successfully');
     } catch (error) {
       console.error('Failed to delete workout:', error);
+      alert('Failed to delete workout. Check console for details.');
       throw error;
     }
   };
 
   const toggleComplete = async (id: string, user: UserRole) => {
+    console.log('toggleComplete called:', { id, user });
     const workout = workouts.find((w) => w.id === id);
-    if (workout) {
-      const completedBy = workout.completedBy || [];
-      const newCompletedBy = completedBy.includes(user)
-        ? completedBy.filter(u => u !== user)
-        : [...completedBy, user];
-      
+    if (!workout) {
+      console.error('Workout not found:', id);
+      return;
+    }
+    
+    console.log('Current workout:', workout);
+    const completedBy = workout.completedBy || [];
+    const newCompletedBy = completedBy.includes(user)
+      ? completedBy.filter(u => u !== user)
+      : [...completedBy, user];
+    
+    console.log('Updating completedBy:', { old: completedBy, new: newCompletedBy });
+    
+    try {
       await updateWorkout(id, { 
         completedBy: newCompletedBy,
-        completed: newCompletedBy.length > 0 // Keep for backward compatibility
+        completed: newCompletedBy.length > 0
       });
+      console.log('Successfully toggled completion');
+    } catch (error) {
+      console.error('Failed to toggle completion:', error);
+      alert('Failed to mark workout as complete. Make sure you have run the SQL schema in Supabase. Check console for details.');
     }
   };
 
