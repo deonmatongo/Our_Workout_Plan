@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Calendar, BarChart3, Trophy, Dumbbell } from 'lucide-react';
 import { FitnessCalendar } from '@/components/FitnessCalendar';
+import { UpcomingEvents } from '@/components/UpcomingEvents';
 import { AddWorkoutModal } from '@/components/AddWorkoutModal';
 import { WorkoutDetail } from '@/components/WorkoutDetail';
 import { ProgressStats } from '@/components/ProgressStats';
@@ -38,38 +39,38 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 glass-card border-b border-border/50">
-        <div className="container max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl gradient-primary glow-primary flex items-center justify-center">
-              <span className="text-xl font-display font-bold text-primary-foreground">M</span>
+        <div className="container max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl gradient-primary glow-primary flex items-center justify-center flex-shrink-0">
+              <span className="text-lg sm:text-xl font-display font-bold text-primary-foreground">M</span>
             </div>
-            <div>
-              <h1 className="text-xl font-display font-bold text-foreground">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-xl font-display font-bold text-foreground truncate">
                 The Matongos
               </h1>
-              <p className="text-sm text-muted-foreground">Your fitness journey</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Your fitness journey</p>
             </div>
           </div>
         </div>
       </header>
 
       {/* Tabs */}
-      <div className="sticky top-[73px] z-30 glass-card border-b border-border/50">
-        <div className="container max-w-4xl mx-auto px-4">
+      <div className="sticky top-[65px] sm:top-[73px] z-30 glass-card border-b border-border/50">
+        <div className="container max-w-4xl mx-auto px-3 sm:px-4">
           <div className="flex gap-1 py-2">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-all duration-200',
+                  'flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg font-medium transition-all duration-200 touch-manipulation',
                   activeTab === tab.id
                     ? 'bg-primary text-primary-foreground glow-primary'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 )}
               >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
+                <tab.icon className="h-4 w-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -77,14 +78,21 @@ const Index = () => {
       </div>
 
       {/* Main Content */}
-      <main className="container max-w-4xl mx-auto px-4 py-6">
+      <main className="container max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {activeTab === 'calendar' && (
-          <FitnessCalendar
-            workouts={workouts}
-            onAddWorkout={(date) => setSelectedDate(date)}
-            onSelectWorkout={(workout) => setSelectedWorkout(workout)}
-            onToggleComplete={toggleComplete}
-          />
+          <>
+            <FitnessCalendar
+              workouts={workouts}
+              onAddWorkout={(date) => setSelectedDate(date)}
+              onSelectWorkout={(workout) => setSelectedWorkout(workout)}
+              onToggleComplete={toggleComplete}
+            />
+            <UpcomingEvents
+              workouts={workouts}
+              onSelectWorkout={(workout) => setSelectedWorkout(workout)}
+              onToggleComplete={toggleComplete}
+            />
+          </>
         )}
 
         {activeTab === 'progress' && (

@@ -1,41 +1,64 @@
 import { useState, useEffect } from 'react';
 import { Workout, WeeklyStats } from '@/types/fitness';
 import { format, startOfWeek, endOfWeek, isWithinInterval, parseISO } from 'date-fns';
-
-const STORAGE_KEY = 'fitness-workouts';
+import { workoutApi } from '@/services/api';
 
 export const useWorkouts = () => {
-  const [workouts, setWorkouts] = useState<Workout[]>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
-  }, [workouts]);
+    loadWorkouts();
+  }, []);
 
-  const addWorkout = (workout: Omit<Workout, 'id'>) => {
-    const newWorkout: Workout = {
-      ...workout,
-      id: crypto.randomUUID(),
-    };
-    setWorkouts((prev) => [...prev, newWorkout]);
+  const loadWorkouts = async () => {
+    try {
+      const data = await workoutApi.getAll();
+      setWorkouts(data);
+    } catch (error) {
+      console.error('Failed to load workouts:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateWorkout = (id: string, updates: Partial<Workout>) => {
-    setWorkouts((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, ...updates } : w))
-    );
+  const addWorkout = async (workout: Omit<Workout, 'id'>) => {
+    try {
+      const newWorkout = await workoutApi.create(workout);
+      setWorkouts((prev) => [...prev, newWorkout]);
+    } catch (error) {
+      console.error('Failed to add workout:', error);
+      throw error;
+    }
   };
 
-  const deleteWorkout = (id: string) => {
-    setWorkouts((prev) => prev.filter((w) => w.id !== id));
+  const updateWorkout = async (id: string, updates: Partial<Workout>) => {
+    try {
+      const updatedWorkout = await workoutApi.update(id, updates);
+      setWorkouts((prev) =>
+        prev.map((w) => (w.id === id ? updatedWorkout : w))
+      );
+    } catch (error) {
+      console.error('Failed to update workout:', error);
+      throw error;
+    }
   };
 
-  const toggleComplete = (id: string) => {
-    setWorkouts((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, completed: !w.completed } : w))
-    );
+  const deleteWorkout = async (id: string) => {
+    try {
+      await workoutApi.delete(id);
+      setWorkouts((prev) => prev.filter((w) => w.id !== id));
+    } catch (error) {
+      console.error('Failed to delete workout:', error);
+      throw error;
+    }
+  };
+
+  const toggleComplete = async (id: string) => {
+    const workout = workouts.find((w) => w.id === id);
+    if (workout) {
+      await updateWorkout(id, { completed: !workout.completed });
+    }
   };
 
   const getWorkoutsForDate = (date: Date): Workout[] => {
@@ -71,6 +94,7 @@ export const useWorkouts = () => {
 
   return {
     workouts,
+    loading,
     addWorkout,
     updateWorkout,
     deleteWorkout,

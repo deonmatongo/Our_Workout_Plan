@@ -1,73 +1,99 @@
-# Welcome to your Lovable project
+# Marathon Muse
 
-## Project info
+A marathon training calendar app with workout tracking.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Project Structure
 
-## How can I edit this code?
+This project consists of two parts:
+- **Frontend**: React + Vite + TypeScript app (root directory)
+- **Backend**: Express API with JSON file storage (server directory)
 
-There are several ways of editing your application.
+## Setup
 
-**Use Lovable**
+### Backend Setup
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
+1. Navigate to the server directory and install dependencies:
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+cd server
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+2. Start the backend server:
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The backend will run on `http://localhost:3001`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Frontend Setup
 
-**Use GitHub Codespaces**
+1. Navigate back to the root directory and install dependencies:
+```sh
+cd ..
+npm install
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. Create a `.env` file (or use the existing one):
+```sh
+VITE_API_URL=http://localhost:3001/api
+```
 
-## What technologies are used for this project?
+3. Start the frontend development server:
+```sh
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173`
+
+## Running the Full Application
+
+You need to run both the backend and frontend servers:
+
+**Terminal 1 - Backend:**
+```sh
+cd server
+npm run dev
+```
+
+**Terminal 2 - Frontend:**
+```sh
+npm run dev
+```
+
+## Technologies
 
 This project is built with:
 
-- Vite
-- TypeScript
+**Frontend:**
 - React
+- TypeScript
+- Vite
 - shadcn-ui
 - Tailwind CSS
+- date-fns
 
-## How can I deploy this project?
+**Backend:**
+- Node.js
+- Express
+- TypeScript
+- JSON file storage
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Features
 
-## Can I connect a custom domain to my Lovable project?
+- 📅 Interactive calendar view
+- 🏃 Workout tracking (runs, strength training, cross-training, rest days)
+- 📊 Weekly and total statistics
+- ✅ Mark workouts as completed
+- 💾 Persistent data storage in JSON files
+- 🎨 Modern, responsive UI
 
-Yes, you can!
+## Data Storage
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+All workout data is stored in `server/data/workouts.json`. This file is automatically created when the backend server starts for the first time.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Development
+
+The application uses a client-server architecture:
+- Frontend communicates with backend via REST API
+- Backend persists data to JSON files
+- CORS enabled for local development

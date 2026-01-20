@@ -1,10 +1,11 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "marathon-muse",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "cd server && npm run dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
