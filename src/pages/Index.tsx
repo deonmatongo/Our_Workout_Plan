@@ -52,7 +52,7 @@ const Index = () => {
                 <h1 className="text-lg sm:text-xl font-display font-bold text-foreground truncate">
                   The Matongos
                 </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground">Your fitness journey</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">OUR fitness journey</p>
               </div>
             </div>
             <UserSwitcher />
