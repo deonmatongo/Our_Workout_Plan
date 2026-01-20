@@ -12,3 +12,9 @@ export interface Workout {
   completedBy: UserRole[];
   createdBy?: UserRole;
 }
+
+export interface MarathonProgress {
+  id: string;
+  completedWorkouts: string[]; // Array of "week-day" keys like "1-Monday"
+  lastUpdated: string;
+}

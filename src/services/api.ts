@@ -1,4 +1,4 @@
-import { Workout } from '@/types/fitness';
+import { Workout, MarathonProgress } from '@/types/fitness';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -34,5 +34,23 @@ export const workoutApi = {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete workout');
+  },
+};
+
+export const marathonProgressApi = {
+  async get(): Promise<MarathonProgress> {
+    const response = await fetch(`${API_BASE_URL}/marathon-progress`);
+    if (!response.ok) throw new Error('Failed to fetch marathon progress');
+    return response.json();
+  },
+
+  async update(progress: MarathonProgress): Promise<MarathonProgress> {
+    const response = await fetch(`${API_BASE_URL}/marathon-progress`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(progress),
+    });
+    if (!response.ok) throw new Error('Failed to update marathon progress');
+    return response.json();
   },
 };

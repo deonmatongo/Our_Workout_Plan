@@ -36,3 +36,19 @@ export async function writeWorkouts<T>(workouts: T[]): Promise<void> {
   await ensureDataDir();
   await fs.writeFile(WORKOUTS_FILE, JSON.stringify(workouts, null, 2));
 }
+
+// Generic file storage functions
+export async function readFromFile<T>(filename: string, defaultData: T = {} as T): Promise<T> {
+  await ensureDataDir();
+  const filePath = path.join(DATA_DIR, filename);
+  await ensureFile(filePath, defaultData);
+  
+  const data = await fs.readFile(filePath, 'utf-8');
+  return JSON.parse(data);
+}
+
+export async function writeToFile<T>(filename: string, data: T): Promise<void> {
+  await ensureDataDir();
+  const filePath = path.join(DATA_DIR, filename);
+  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+}

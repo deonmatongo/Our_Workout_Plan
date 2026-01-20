@@ -39,3 +39,9 @@ export interface WeeklyStats {
   partner1Completed?: number;
   partner2Completed?: number;
 }
+
+export interface MarathonProgress {
+  id: string;
+  completedWorkouts: string[];
+  lastUpdated: string;
+}

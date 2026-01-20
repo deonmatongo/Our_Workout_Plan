@@ -1,23 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, CheckCircle2, Circle, Trophy, MapPin } from 'lucide-react';
 import { marathonPlan } from '@/data/marathonPlan';
+import { marathonProgressApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export const MarathonPlanner = () => {
   const [expandedWeek, setExpandedWeek] = useState<number | null>(1);
   const [completedWorkouts, setCompletedWorkouts] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
 
-  const toggleWorkout = (weekDay: string) => {
-    setCompletedWorkouts((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(weekDay)) {
-        newSet.delete(weekDay);
-      } else {
-        newSet.add(weekDay);
-      }
-      return newSet;
-    });
+  useEffect(() => {
+    loadProgress();
+  }, []);
+
+  const loadProgress = async () => {
+    try {
+      const progress = await marathonProgressApi.get();
+      setCompletedWorkouts(new Set(progress.completedWorkouts));
+    } catch (error) {
+      console.error('Failed to load marathon progress:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleWorkout = async (weekDay: string) => {
+    const newSet = new Set(completedWorkouts);
+    if (newSet.has(weekDay)) {
+      newSet.delete(weekDay);
+    } else {
+      newSet.add(weekDay);
+    }
+    
+    setCompletedWorkouts(newSet);
+    
+    try {
+      await marathonProgressApi.update({
+        id: 'default',
+        completedWorkouts: Array.from(newSet),
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Failed to save marathon progress:', error);
+      // Revert on error
+      setCompletedWorkouts(completedWorkouts);
+    }
   };
 
   const getTotalProgress = () => {
