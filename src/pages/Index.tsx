@@ -40,12 +40,12 @@ const Index = () => {
       <header className="sticky top-0 z-40 glass-card border-b border-border/50">
         <div className="container max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl gradient-primary glow-primary">
-              <Dumbbell className="h-6 w-6 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-xl gradient-primary glow-primary flex items-center justify-center">
+              <span className="text-xl font-display font-bold text-primary-foreground">M</span>
             </div>
             <div>
               <h1 className="text-xl font-display font-bold text-foreground">
-                FitTrack
+                The Matongos
               </h1>
               <p className="text-sm text-muted-foreground">Your fitness journey</p>
             </div>
