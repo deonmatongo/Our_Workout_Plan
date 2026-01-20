@@ -84,6 +84,30 @@ export const ProgressStats = ({ weeklyStats, totalStats }: ProgressStatsProps) =
         <p className="text-sm text-muted-foreground mt-2">
           {weeklyStats.completedWorkouts} of {weeklyStats.totalWorkouts} workouts completed
         </p>
+        
+        {/* Individual Partner Progress */}
+        <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/50">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-blue-500" />
+              <span className="text-sm font-medium">Partner 1</span>
+            </div>
+            <p className="text-2xl font-bold text-blue-500">
+              {weeklyStats.partner1Completed || 0}
+            </p>
+            <p className="text-xs text-muted-foreground">workouts completed</p>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-pink-500" />
+              <span className="text-sm font-medium">Partner 2</span>
+            </div>
+            <p className="text-2xl font-bold text-pink-500">
+              {weeklyStats.partner2Completed || 0}
+            </p>
+            <p className="text-xs text-muted-foreground">workouts completed</p>
+          </div>
+        </div>
       </div>
 
       {/* All Time Stats */}
@@ -109,6 +133,32 @@ export const ProgressStats = ({ weeklyStats, totalStats }: ProgressStatsProps) =
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Completion Rate</span>
             <span className="font-bold text-primary">{totalCompletionRate}%</span>
+          </div>
+          
+          {/* Individual Partner All-Time Stats */}
+          <div className="pt-4 border-t border-border/50">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                  <span className="text-sm font-medium text-blue-500">P1</span>
+                </div>
+                <p className="text-xl font-bold text-foreground">
+                  {totalStats.partner1Completed || 0}
+                </p>
+                <p className="text-xs text-muted-foreground">total completed</p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-pink-500" />
+                  <span className="text-sm font-medium text-pink-500">P2</span>
+                </div>
+                <p className="text-xl font-bold text-foreground">
+                  {totalStats.partner2Completed || 0}
+                </p>
+                <p className="text-xs text-muted-foreground">total completed</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

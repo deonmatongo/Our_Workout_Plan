@@ -123,25 +123,45 @@ export const FitnessCalendar = ({
                 </span>
 
                 {/* Workout indicators */}
-                <div className="flex-1 flex flex-wrap gap-0.5 mt-0.5 sm:mt-1">
-                  {dayWorkouts.slice(0, 3).map((workout) => (
-                    <div
-                      key={workout.id}
-                      className={cn(
-                        'w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full',
-                        getWorkoutTypeColor(workout.type),
-                        workout.completed && 'ring-1 ring-foreground/30'
-                      )}
-                      title={workout.title}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectWorkout(workout);
-                      }}
-                    />
-                  ))}
-                  {dayWorkouts.length > 3 && (
+                <div className="flex-1 flex flex-col gap-0.5 mt-0.5 sm:mt-1">
+                  {dayWorkouts.slice(0, 2).map((workout) => {
+                    const partner1Done = workout.completedBy?.includes('partner1');
+                    const partner2Done = workout.completedBy?.includes('partner2');
+                    const bothDone = partner1Done && partner2Done;
+                    
+                    return (
+                      <div
+                        key={workout.id}
+                        className="flex items-center gap-0.5"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectWorkout(workout);
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            'w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full',
+                            getWorkoutTypeColor(workout.type),
+                            bothDone && 'ring-1 ring-green-500'
+                          )}
+                          title={workout.title}
+                        />
+                        {(partner1Done || partner2Done) && (
+                          <div className="flex gap-[1px]">
+                            {partner1Done && (
+                              <div className="w-1 h-1 rounded-full bg-blue-500" title="Partner 1 completed" />
+                            )}
+                            {partner2Done && (
+                              <div className="w-1 h-1 rounded-full bg-pink-500" title="Partner 2 completed" />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {dayWorkouts.length > 2 && (
                     <span className="text-[8px] sm:text-[10px] text-muted-foreground">
-                      +{dayWorkouts.length - 3}
+                      +{dayWorkouts.length - 2}
                     </span>
                   )}
                 </div>

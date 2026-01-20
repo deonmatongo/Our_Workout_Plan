@@ -1,3 +1,11 @@
+export type UserRole = 'partner1' | 'partner2';
+
+export interface User {
+  id: UserRole;
+  name: string;
+  color: string;
+}
+
 export interface Workout {
   id: string;
   date: string;
@@ -6,7 +14,9 @@ export interface Workout {
   duration: number; // in minutes
   distance?: number; // in km
   notes?: string;
-  completed: boolean;
+  completed: boolean; // deprecated - use completedBy
+  completedBy: UserRole[];
+  createdBy?: UserRole;
 }
 
 export interface MarathonWeek {
@@ -26,4 +36,6 @@ export interface WeeklyStats {
   totalDistance: number;
   totalDuration: number;
   completedWorkouts: number;
+  partner1Completed?: number;
+  partner2Completed?: number;
 }

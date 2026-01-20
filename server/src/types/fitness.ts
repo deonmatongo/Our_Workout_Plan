@@ -1,3 +1,5 @@
+export type UserRole = 'partner1' | 'partner2';
+
 export interface Workout {
   id: string;
   date: string;
@@ -7,4 +9,6 @@ export interface Workout {
   distance?: number;
   notes?: string;
   completed: boolean;
+  completedBy: UserRole[];
+  createdBy?: UserRole;
 }

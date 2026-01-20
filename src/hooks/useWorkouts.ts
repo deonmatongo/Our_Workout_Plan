@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Workout, WeeklyStats } from '@/types/fitness';
+import { Workout, WeeklyStats, UserRole } from '@/types/fitness';
 import { format, startOfWeek, endOfWeek, isWithinInterval, parseISO } from 'date-fns';
 import { workoutApi } from '@/services/api';
 
@@ -14,7 +14,12 @@ export const useWorkouts = () => {
   const loadWorkouts = async () => {
     try {
       const data = await workoutApi.getAll();
-      setWorkouts(data);
+      // Ensure completedBy array exists for all workouts
+      const normalizedData = data.map(w => ({
+        ...w,
+        completedBy: w.completedBy || (w.completed ? ['partner1', 'partner2'] : [])
+      }));
+      setWorkouts(normalizedData);
     } catch (error) {
       console.error('Failed to load workouts:', error);
     } finally {
@@ -24,7 +29,10 @@ export const useWorkouts = () => {
 
   const addWorkout = async (workout: Omit<Workout, 'id'>) => {
     try {
-      const newWorkout = await workoutApi.create(workout);
+      const newWorkout = await workoutApi.create({
+        ...workout,
+        completedBy: workout.completedBy || [],
+      });
       setWorkouts((prev) => [...prev, newWorkout]);
     } catch (error) {
       console.error('Failed to add workout:', error);
@@ -54,10 +62,18 @@ export const useWorkouts = () => {
     }
   };
 
-  const toggleComplete = async (id: string) => {
+  const toggleComplete = async (id: string, user: UserRole) => {
     const workout = workouts.find((w) => w.id === id);
     if (workout) {
-      await updateWorkout(id, { completed: !workout.completed });
+      const completedBy = workout.completedBy || [];
+      const newCompletedBy = completedBy.includes(user)
+        ? completedBy.filter(u => u !== user)
+        : [...completedBy, user];
+      
+      await updateWorkout(id, { 
+        completedBy: newCompletedBy,
+        completed: newCompletedBy.length > 0 // Keep for backward compatibility
+      });
     }
   };
 
@@ -79,7 +95,9 @@ export const useWorkouts = () => {
       totalWorkouts: weekWorkouts.length,
       totalDistance: weekWorkouts.reduce((sum, w) => sum + (w.distance || 0), 0),
       totalDuration: weekWorkouts.reduce((sum, w) => sum + w.duration, 0),
-      completedWorkouts: weekWorkouts.filter((w) => w.completed).length,
+      completedWorkouts: weekWorkouts.filter((w) => w.completedBy && w.completedBy.length > 0).length,
+      partner1Completed: weekWorkouts.filter((w) => w.completedBy?.includes('partner1')).length,
+      partner2Completed: weekWorkouts.filter((w) => w.completedBy?.includes('partner2')).length,
     };
   };
 
@@ -88,7 +106,9 @@ export const useWorkouts = () => {
       totalWorkouts: workouts.length,
       totalDistance: workouts.reduce((sum, w) => sum + (w.distance || 0), 0),
       totalDuration: workouts.reduce((sum, w) => sum + w.duration, 0),
-      completedWorkouts: workouts.filter((w) => w.completed).length,
+      completedWorkouts: workouts.filter((w) => w.completedBy && w.completedBy.length > 0).length,
+      partner1Completed: workouts.filter((w) => w.completedBy?.includes('partner1')).length,
+      partner2Completed: workouts.filter((w) => w.completedBy?.includes('partner2')).length,
     };
   };
 

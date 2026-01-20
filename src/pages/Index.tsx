@@ -6,7 +6,9 @@ import { AddWorkoutModal } from '@/components/AddWorkoutModal';
 import { WorkoutDetail } from '@/components/WorkoutDetail';
 import { ProgressStats } from '@/components/ProgressStats';
 import { MarathonPlanner } from '@/components/MarathonPlanner';
+import { UserSwitcher } from '@/components/UserSwitcher';
 import { useWorkouts } from '@/hooks/useWorkouts';
+import { useUser } from '@/contexts/UserContext';
 import { Workout } from '@/types/fitness';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +24,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('calendar');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+  const { currentUser } = useUser();
 
   const {
     workouts,
@@ -40,16 +43,19 @@ const Index = () => {
       {/* Header */}
       <header className="sticky top-0 z-40 glass-card border-b border-border/50">
         <div className="container max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl gradient-primary glow-primary flex items-center justify-center flex-shrink-0">
-              <span className="text-lg sm:text-xl font-display font-bold text-primary-foreground">M</span>
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl gradient-primary glow-primary flex items-center justify-center flex-shrink-0">
+                <span className="text-lg sm:text-xl font-display font-bold text-primary-foreground">M</span>
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl font-display font-bold text-foreground truncate">
+                  The Matongos
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">Your fitness journey</p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl font-display font-bold text-foreground truncate">
-                The Matongos
-              </h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">Your fitness journey</p>
-            </div>
+            <UserSwitcher />
           </div>
         </div>
       </header>
@@ -85,12 +91,12 @@ const Index = () => {
               workouts={workouts}
               onAddWorkout={(date) => setSelectedDate(date)}
               onSelectWorkout={(workout) => setSelectedWorkout(workout)}
-              onToggleComplete={toggleComplete}
+              onToggleComplete={(id) => toggleComplete(id, currentUser)}
             />
             <UpcomingEvents
               workouts={workouts}
               onSelectWorkout={(workout) => setSelectedWorkout(workout)}
-              onToggleComplete={toggleComplete}
+              onToggleComplete={(id) => toggleComplete(id, currentUser)}
             />
           </>
         )}
@@ -118,7 +124,7 @@ const Index = () => {
         <WorkoutDetail
           workout={selectedWorkout}
           onClose={() => setSelectedWorkout(null)}
-          onToggleComplete={toggleComplete}
+          onToggleComplete={(id) => toggleComplete(id, currentUser)}
           onDelete={deleteWorkout}
         />
       )}

@@ -147,10 +147,20 @@ export const UpcomingEvents = ({
                             <span>{workout.distance} km</span>
                           </div>
                         )}
-                        {workout.completed && (
-                          <div className="flex items-center gap-1 text-green-500 font-medium">
-                            <Check className="h-3 w-3 sm:h-4 sm:w-4" />
-                            <span>Completed</span>
+                        {workout.completedBy && workout.completedBy.length > 0 && (
+                          <div className="flex items-center gap-1.5">
+                            {workout.completedBy.includes('partner1') && (
+                              <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                <span className="text-xs text-blue-500">P1</span>
+                              </div>
+                            )}
+                            {workout.completedBy.includes('partner2') && (
+                              <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 rounded-full bg-pink-500" />
+                                <span className="text-xs text-pink-500">P2</span>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
