@@ -7,6 +7,7 @@ import { WorkoutDetail } from '@/components/WorkoutDetail';
 import { ProgressStats } from '@/components/ProgressStats';
 import { MarathonPlanner } from '@/components/MarathonPlanner';
 import { UserSwitcher } from '@/components/UserSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useWorkouts } from '@/hooks/useWorkouts';
 import { useUser } from '@/contexts/UserContext';
 import { Workout } from '@/types/fitness';
@@ -55,7 +56,10 @@ const Index = () => {
                 <p className="text-xs sm:text-sm text-muted-foreground">OUR fitness journey</p>
               </div>
             </div>
-            <UserSwitcher />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <UserSwitcher />
+            </div>
           </div>
         </div>
       </header>
