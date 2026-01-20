@@ -90,7 +90,7 @@ export const ProgressStats = ({ weeklyStats, totalStats }: ProgressStatsProps) =
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <span className="text-sm font-medium">Partner 1</span>
+              <span className="text-sm font-medium">Daddy</span>
             </div>
             <p className="text-2xl font-bold text-blue-500">
               {weeklyStats.partner1Completed || 0}
@@ -100,7 +100,7 @@ export const ProgressStats = ({ weeklyStats, totalStats }: ProgressStatsProps) =
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-pink-500" />
-              <span className="text-sm font-medium">Partner 2</span>
+              <span className="text-sm font-medium">Little Princess</span>
             </div>
             <p className="text-2xl font-bold text-pink-500">
               {weeklyStats.partner2Completed || 0}

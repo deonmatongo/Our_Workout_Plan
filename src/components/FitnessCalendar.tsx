@@ -149,10 +149,10 @@ export const FitnessCalendar = ({
                         {(partner1Done || partner2Done) && (
                           <div className="flex gap-[1px]">
                             {partner1Done && (
-                              <div className="w-1 h-1 rounded-full bg-blue-500" title="Partner 1 completed" />
+                              <div className="w-1 h-1 rounded-full bg-blue-500" title="Daddy completed" />
                             )}
                             {partner2Done && (
-                              <div className="w-1 h-1 rounded-full bg-pink-500" title="Partner 2 completed" />
+                              <div className="w-1 h-1 rounded-full bg-pink-500" title="Little Princess completed" />
                             )}
                           </div>
                         )}
