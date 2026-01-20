@@ -1,5 +1,5 @@
 import { format, addDays, isSameDay, parseISO } from 'date-fns';
-import { Calendar, Clock, MapPin, CheckCircle2, Circle } from 'lucide-react';
+import { Calendar, Clock, MapPin, CheckCircle2, Circle, Footprints, Dumbbell, Bike, Moon, Check } from 'lucide-react';
 import { Workout } from '@/types/fitness';
 import { cn } from '@/lib/utils';
 
@@ -25,15 +25,15 @@ export const UpcomingEvents = ({
   const getWorkoutIcon = (type: Workout['type']) => {
     switch (type) {
       case 'run':
-        return '🏃';
+        return Footprints;
       case 'strength':
-        return '💪';
+        return Dumbbell;
       case 'cross-training':
-        return '🚴';
+        return Bike;
       case 'rest':
-        return '😴';
+        return Moon;
       default:
-        return '📅';
+        return Calendar;
     }
   };
 
@@ -110,9 +110,10 @@ export const UpcomingEvents = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-xl flex-shrink-0">
-                            {getWorkoutIcon(workout.type)}
-                          </span>
+                          {(() => {
+                            const Icon = getWorkoutIcon(workout.type);
+                            return <Icon className="h-5 w-5 flex-shrink-0" />;
+                          })()}
                           <h3 className="font-semibold text-sm sm:text-base truncate">
                             {workout.title}
                           </h3>
@@ -147,9 +148,10 @@ export const UpcomingEvents = ({
                           </div>
                         )}
                         {workout.completed && (
-                          <span className="text-green-500 font-medium">
-                            ✓ Completed
-                          </span>
+                          <div className="flex items-center gap-1 text-green-500 font-medium">
+                            <Check className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span>Completed</span>
+                          </div>
                         )}
                       </div>
 
