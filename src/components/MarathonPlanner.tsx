@@ -26,6 +26,7 @@ export const MarathonPlanner = () => {
   };
 
   const toggleWorkout = async (weekDay: string) => {
+    console.log('Toggling workout:', weekDay);
     const newSet = new Set(completedWorkouts);
     if (newSet.has(weekDay)) {
       newSet.delete(weekDay);
@@ -33,16 +34,19 @@ export const MarathonPlanner = () => {
       newSet.add(weekDay);
     }
     
+    console.log('New completed workouts:', Array.from(newSet));
     setCompletedWorkouts(newSet);
     
     try {
-      await marathonProgressApi.update({
+      const result = await marathonProgressApi.update({
         id: 'default',
         completedWorkouts: Array.from(newSet),
         lastUpdated: new Date().toISOString(),
       });
+      console.log('Successfully saved marathon progress:', result);
     } catch (error) {
       console.error('Failed to save marathon progress:', error);
+      alert('Failed to save progress. Make sure you have run the SQL schema in Supabase. Check console for details.');
       // Revert on error
       setCompletedWorkouts(completedWorkouts);
     }
