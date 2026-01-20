@@ -34,13 +34,13 @@ export const FitnessCalendar = ({
   const getWorkoutTypeColor = (type: Workout['type']) => {
     switch (type) {
       case 'run':
-        return 'bg-primary';
+        return 'bg-workout-run';
       case 'strength':
-        return 'bg-accent';
+        return 'bg-workout-strength';
       case 'cross-training':
-        return 'bg-secondary';
+        return 'bg-workout-cross';
       case 'rest':
-        return 'bg-muted';
+        return 'bg-workout-rest';
       default:
         return 'bg-primary';
     }
@@ -156,17 +156,17 @@ export const FitnessCalendar = ({
       </div>
 
       {/* Legend */}
-      <div className="flex gap-4 mt-6 text-sm">
+      <div className="flex flex-wrap gap-4 mt-6 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-primary" />
+          <div className="w-3 h-3 rounded-full bg-workout-run" />
           <span className="text-muted-foreground">Run</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-accent" />
+          <div className="w-3 h-3 rounded-full bg-workout-strength" />
           <span className="text-muted-foreground">Strength</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-secondary" />
+          <div className="w-3 h-3 rounded-full bg-workout-cross" />
           <span className="text-muted-foreground">Cross-training</span>
         </div>
       </div>

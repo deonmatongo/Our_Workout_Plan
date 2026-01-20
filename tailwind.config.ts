@@ -65,6 +65,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        workout: {
+          run: "hsl(var(--workout-run))",
+          strength: "hsl(var(--workout-strength))",
+          cross: "hsl(var(--workout-cross))",
+          rest: "hsl(var(--workout-rest))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

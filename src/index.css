@@ -52,6 +52,12 @@
     --glow-primary: 84 81% 44%;
     --gradient-start: 84 81% 44%;
     --gradient-end: 142 76% 36%;
+
+    /* Workout type colors */
+    --workout-run: 199 89% 48%;
+    --workout-strength: 280 65% 60%;
+    --workout-cross: 32 95% 55%;
+    --workout-rest: 220 15% 30%;
   }
 
   .dark {
